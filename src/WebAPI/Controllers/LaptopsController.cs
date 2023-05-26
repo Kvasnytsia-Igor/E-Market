@@ -1,7 +1,8 @@
-﻿using Domain.Entities;
-using Infrastructure.Persistence;
+﻿using Application.Common.Models;
+using Application.Laptops.Queries.GetLaptopsWithPagination;
+using Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers;
 
@@ -9,16 +10,15 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class LaptopsController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private ISender? _mediator;
 
-    public LaptopsController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private ISender Mediator =>
+        _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Laptop>>> GetLaptops()
+    public async Task<ActionResult<PaginatedList<Laptop>>> GetLaptopsWithPagination(
+        [FromQuery] GetLaptopsWithPaginationQuery query)
     {
-        return await _context.Laptops.ToListAsync();
+        return await Mediator.Send(query);
     }
 }

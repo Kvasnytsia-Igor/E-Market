@@ -1,0 +1,1 @@
+fluentValidation інтеграція з laptops

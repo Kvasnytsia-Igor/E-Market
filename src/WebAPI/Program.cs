@@ -1,14 +1,20 @@
+using Application.Common.Interfaces;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Application;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApplicationServices();
+
+builder.Services.AddControllers();
+
+builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("EMarketDb")));
 
-builder.Services.AddScoped<ApplicationDbContextInitialiser>();
-
-builder.Services.AddControllers();
+builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
 var app = builder.Build();
 
