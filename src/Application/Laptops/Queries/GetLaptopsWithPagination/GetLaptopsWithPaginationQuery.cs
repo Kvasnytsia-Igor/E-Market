@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Laptops.Queries.GetLaptopsWithPagination;
 
-public record class GetLaptopsWithPaginationQuery : IRequest<PaginatedList<Laptop>>
+public record class GetLaptopsWithPaginationQuery : IRequest<IApiResponse>
 {
-    public int PageNumber { get; init; } = 1;
+    public required int PageNumber { get; init; }
 
-    public int PageSize { get; init; } = 10;
+    public required int PageSize { get; init; }
 }
 
-public class GetLaptopsWithPaginationQueryHeandler : IRequestHandler<GetLaptopsWithPaginationQuery, PaginatedList<Laptop>>
+public class GetLaptopsWithPaginationQueryHeandler : IRequestHandler<GetLaptopsWithPaginationQuery, IApiResponse>
 {
     private readonly IApplicationDbContext _context;
 
@@ -22,9 +22,11 @@ public class GetLaptopsWithPaginationQueryHeandler : IRequestHandler<GetLaptopsW
         _context = context;
     }
 
-    public async Task<PaginatedList<Laptop>> Handle(GetLaptopsWithPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<IApiResponse> Handle(GetLaptopsWithPaginationQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Laptop> laptops = _context.Laptops.AsNoTracking();
-        return await PaginatedList<Laptop>.CreateAsync(laptops, request.PageNumber, request.PageSize);
+        PaginatedList<Laptop> paginatedList = await PaginatedList<Laptop>
+            .CreateAsync(laptops, request.PageNumber, request.PageSize);
+        return ResponseConverter.GetLaptopsWithPaginationResponse(paginatedList);
     }
 }

@@ -49,30 +49,17 @@ public class ApplicationDbContextInitialiser
     {
         if (!_context.Laptops.Any())
         {
-            _context.Laptops.AddRange(new Laptop[]
+            List<Laptop> laptops = new();
+            for (int i = 0; i < 20; i++)
             {
-                new Laptop
+                laptops.Add(new Laptop
                 {
-                    Brand = "Acer",
-                    Series = "Aspire 7",
-                    Price = 29999m,
-                    Created = DateTime.Now,
-                },
-                new Laptop
-                {
-                    Brand = "ASUS",
-                    Series = "Laptop",
-                    Price = 18599m,
-                    Created = DateTime.Now,
-                },
-                new Laptop
-                {
-                    Brand = "Lenovo",
-                    Series = "IdeaPad 3",
-                    Price = 23999m,
-                    Created = DateTime.Now,
-                }
-            });
+                    Brand = $"Brand{i}",
+                    Price = Random.Shared.Next(1, 25),
+                    Series = $"Series{i}",
+                });
+            }
+            _context.Laptops.AddRange(laptops);
             await _context.SaveChangesAsync();
         }
     }

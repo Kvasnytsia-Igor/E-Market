@@ -5,11 +5,11 @@ namespace Domain.Entities;
 
 public class Laptop : BaseAuditableEntity
 {
-    public string Brand { get; set; } = string.Empty;
+    public required string Brand { get; set; }
 
-    public string Series { get; set; } = string.Empty;
+    public required string Series { get; set; }
 
-    public decimal Price { get; set; }
+    public required decimal Price { get; set; }
 
     public Currency Currency { get; set; } = Currency.UAH;
 }

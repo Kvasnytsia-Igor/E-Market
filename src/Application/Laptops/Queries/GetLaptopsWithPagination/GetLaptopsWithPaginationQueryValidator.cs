@@ -12,10 +12,7 @@ public class GetLaptopsWithPaginationQueryValidator : AbstractValidator<GetLapto
             .WithMessage("{PropertyName} at least greater than or equal to 1.");
 
         RuleFor(query => query.PageSize)
-            .Cascade(CascadeMode.Stop)
             .GreaterThanOrEqualTo(1)
-            .WithMessage("{PropertyName} at least greater than or equal to 1.")
-            .Must((query, pageSize) => (query.PageNumber - 1) * pageSize > 1)
-            .WithMessage("{PropertyName} is too big.");
+            .WithMessage("{PropertyName} at least greater than or equal to 1.");
     }
 }
