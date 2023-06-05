@@ -4,11 +4,11 @@ public abstract class BaseAuditableEntity
 {
     public Guid Id { get; set; }
 
-    public DateTime Created { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
 
-    public string CreatedBy { get; set; } = string.Empty;
+    public string? CreatedBy { get; set; } 
 
-    public DateTime LastModified { get; set; }
+    public DateTime? LastModified { get; set; }
 
-    public  string LastModifiedBy { get; set; } = string.Empty;
+    public  string? LastModifiedBy { get; set; }
 }

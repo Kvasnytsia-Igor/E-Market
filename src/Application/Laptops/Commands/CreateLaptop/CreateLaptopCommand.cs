@@ -32,10 +32,10 @@ public class CreateLaptopCommandHandler : IRequestHandler<CreateLaptopCommand, I
             Series = request.Series,
         };
         _context.Laptops.Add(laptop);
-        await _context.SaveChangesAsync(cancellationToken);
+        int entries = await _context.SaveChangesAsync(cancellationToken);
         Laptop? fromDB = _context.Laptops
-            .OrderByDescending(user => user.Id)
+            .OrderByDescending(user => user.Created)
             .FirstOrDefault();
-        return ResponseConverter.CreateLaptopResponse(fromDB);
+        return ResponseConverter.CreateLaptopCommandResponse(fromDB, entries);
     }
 }

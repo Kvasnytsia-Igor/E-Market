@@ -35,6 +35,6 @@ public class UpdateLaptopCommandHandler : IRequestHandler<UpdateLaptopCommand, I
             laptop.Price = laptopDTO.Price;
             entries = await _context.SaveChangesAsync(cancellationToken);
         }
-        return ResponseConverter.UpdateLaptopResponse(laptop, request.Id, entries);
+        return ResponseConverter.UpdateLaptopCommandResponse(laptop, request.Id, entries);
     }
 }

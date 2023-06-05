@@ -52,7 +52,7 @@ public class LaptopsController : ControllerBase
     public async Task<ActionResult> GetLaptopsWithPagination([FromHeader] GetLaptopsWithPaginationQuery query)
         => await Go(query);
 
-    [HttpGet("{guid:guid}")]
+    [HttpGet("{Id:guid}")]
     public async Task<ActionResult> GetLaptopById([FromHeader] GetLaptopByIdQuery query)
         => await Go(query);
 
@@ -60,7 +60,7 @@ public class LaptopsController : ControllerBase
     public async Task<ActionResult> CreateLaptop([FromBody] CreateLaptopCommand command)
         => await Go(command);
 
-    [HttpPut("{id:guid}")]
+    [HttpPut("{Id:guid}")]
     public async Task<ActionResult> UpdateLaptop(Guid id, [FromBody] UpdateLaptopDTO userDTO)
         => await Go(new UpdateLaptopCommand
         {
@@ -68,7 +68,7 @@ public class LaptopsController : ControllerBase
             LaptopDTO = userDTO
         });
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{Id:guid}")]
     public async Task<ActionResult> DeleteUser([FromHeader] DeleteLaptopCommand command)
         => await Go(command);
 }

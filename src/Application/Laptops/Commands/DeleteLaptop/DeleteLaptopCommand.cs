@@ -25,11 +25,12 @@ public class DeleteLaptopCommandHandler : IRequestHandler<DeleteLaptopCommand, I
         Laptop? laptop = _context.Laptops
            .Where(laptop => laptop.Id == request.Id)
            .FirstOrDefault();
+        int entries = 0;
         if (laptop is not null)
         {
             _context.Laptops.Remove(laptop);
-            await _context.SaveChangesAsync(cancellationToken);
+            entries = await _context.SaveChangesAsync(cancellationToken);
         }
-        return ResponseConverter.DeleteLaptopResponse(laptop, request.Id);
+        return ResponseConverter.DeleteLaptopCommandResponse(laptop, request.Id, entries);
     }
 }
