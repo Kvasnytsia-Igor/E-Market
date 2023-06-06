@@ -1,0 +1,29 @@
+﻿using Application.Common.Interfaces;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Application.Services;
+
+public class LaptopsService : ILaptopsService
+{
+    private readonly IApplicationDbContext _context;
+
+    public LaptopsService(IApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<int> Add(Laptop laptop, CancellationToken cancellationToken)
+    {
+        _context.Laptops.Add(laptop);
+        return await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<Laptop?> GetLastAdded(CancellationToken cancellationToken)
+    {
+        Laptop? laptopFromDB = await _context.Laptops
+           .OrderByDescending(user => user.Created)
+           .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        return laptopFromDB;
+    }
+}

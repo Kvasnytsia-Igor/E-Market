@@ -6,23 +6,13 @@ public class UpdateLaptopCommandValidator : AbstractValidator<UpdateLaptopComman
 {
     public UpdateLaptopCommandValidator()
     {
-        RuleFor(command => command.Id).NotEmpty();
-
+        RuleFor(command => command.Id).NotEqual(Guid.Empty);
         RuleFor(command => command.LaptopDTO)
             .ChildRules(dto =>
             {
-                dto.RuleFor(user => user.Brand)
-                .NotEmpty()
-                .Matches("^[A-Za-z]+$")
-                .Length(3, 255);
-
-                dto.RuleFor(user => user.Series)
-                .NotEmpty()
-                .Matches("^[A-Za-z]+$")
-                .Length(3, 255);
-
-                dto.RuleFor(user => user.Price)
-                .GreaterThan(0);
+                dto.RuleFor(user => user.Brand).Length(3, 255);
+                dto.RuleFor(user => user.Series).Length(3, 255);
+                dto.RuleFor(user => user.Price).GreaterThan(0);
             });
     }
 }

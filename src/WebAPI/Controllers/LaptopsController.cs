@@ -28,23 +28,26 @@ public class LaptopsController : ControllerBase
     private ILogger<LaptopsController> Logger =>
         _logger ??= HttpContext.RequestServices.GetRequiredService<ILogger<LaptopsController>>();
 
-    private async Task<ActionResult> Go(IRequest<IApiResponse> request)
+    private async Task<ActionResult> Go(IRequest<ApiResponse> request)
     {
         try
         {
-            IApiResponse response = await Mediator.Send(request);
-            return StatusCode(response.StatusCode, response.Result);
+            ApiResponse response = await Mediator.Send(request);
+            return StatusCode(response.StatusCode, response.Data);
         }
         catch (Exception ex)
         {
-            string requestName = typeof(IRequest<IApiResponse>).Name;
+            string requestName = typeof(IRequest<ApiResponse>).Name;
             Logger.LogError(ex, "Unhandled Exception for Request {Name} {@Request}", requestName, request);
             if (Environment.IsDevelopment())
             {
                 throw;
             }
-            IApiResponse response = new ApiResponse500("Ops! Call the service provider");
-            return StatusCode(response.StatusCode, response.Result);
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new
+                {
+                    Message = "Ops! Call the service provider"
+                });
         }
     }
 

@@ -2,17 +2,19 @@
 using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Laptops.Commands.UpdateLaptop;
 
-public class UpdateLaptopCommand : IRequest<IApiResponse>
+public class UpdateLaptopCommand : IRequest<ApiResponse>
 {
     public required Guid Id { get; init; }
 
     public required UpdateLaptopDTO LaptopDTO { get; init; }
 }
 
-public class UpdateLaptopCommandHandler : IRequestHandler<UpdateLaptopCommand, IApiResponse>
+public class UpdateLaptopCommandHandler : IRequestHandler<UpdateLaptopCommand, ApiResponse>
 {
     private readonly IApplicationDbContext _context;
 
@@ -21,11 +23,11 @@ public class UpdateLaptopCommandHandler : IRequestHandler<UpdateLaptopCommand, I
         _context = context;
     }
 
-    public async Task<IApiResponse> Handle(UpdateLaptopCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse> Handle(UpdateLaptopCommand request, CancellationToken cancellationToken)
     {
-        Laptop? laptop = _context.Laptops
+        Laptop? laptop = await _context.Laptops
             .Where(laptop => laptop.Id == request.Id)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         int entries = 0;
         if (laptop is not null)
         {
@@ -35,6 +37,31 @@ public class UpdateLaptopCommandHandler : IRequestHandler<UpdateLaptopCommand, I
             laptop.Price = laptopDTO.Price;
             entries = await _context.SaveChangesAsync(cancellationToken);
         }
-        return ResponseConverter.UpdateLaptopCommandResponse(laptop, request.Id, entries);
+        return Response(laptop, request.Id, entries);
+    }
+
+    private static ApiResponse Response(Laptop? laptop, Guid id, int entries)
+    {
+        if (laptop == null)
+        {
+            return new ApiResponse(StatusCodes.Status404NotFound, new
+            {
+                Message = string.Format("There is no laptop with guid = {0,0}", id)
+            });
+        }
+        else if (entries == 0)
+        {
+            return new ApiResponse(StatusCodes.Status500InternalServerError, new
+            {
+                Message = "The database changes is not secceded"
+            });
+        }
+        else
+        {
+            return new ApiResponse(StatusCodes.Status200OK, new
+            {
+                laptop
+            });
+        }
     }
 }

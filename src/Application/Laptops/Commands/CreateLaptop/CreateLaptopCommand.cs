@@ -2,10 +2,11 @@
 using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Laptops.Commands.CreateLaptop;
 
-public class CreateLaptopCommand : IRequest<IApiResponse>
+public class CreateLaptopCommand : IRequest<ApiResponse>
 {
     public required string Brand { get; init; }
 
@@ -14,28 +15,50 @@ public class CreateLaptopCommand : IRequest<IApiResponse>
     public required decimal Price { get; init; }
 }
 
-public class CreateLaptopCommandHandler : IRequestHandler<CreateLaptopCommand, IApiResponse>
+public class CreateLaptopCommandHandler : IRequestHandler<CreateLaptopCommand, ApiResponse>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly ILaptopsService _laptopsService;
 
-    public CreateLaptopCommandHandler(IApplicationDbContext context)
+    public CreateLaptopCommandHandler(ILaptopsService laptopsService)
     {
-        _context = context;
+        _laptopsService = laptopsService;
     }
 
-    public async Task<IApiResponse> Handle(CreateLaptopCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse> Handle(CreateLaptopCommand request, CancellationToken cancellationToken)
     {
-        Laptop? laptop = new()
+        Laptop laptop = new()
         {
             Brand = request.Brand,
             Price = request.Price,
             Series = request.Series,
         };
-        _context.Laptops.Add(laptop);
-        int entries = await _context.SaveChangesAsync(cancellationToken);
-        Laptop? fromDB = _context.Laptops
-            .OrderByDescending(user => user.Created)
-            .FirstOrDefault();
-        return ResponseConverter.CreateLaptopCommandResponse(fromDB, entries);
+        int entries = await _laptopsService.Add(laptop, cancellationToken);
+        Laptop? laptopFromDB = await _laptopsService.GetLastAdded(cancellationToken);
+        return Response(laptopFromDB, entries);
+    }
+
+    private static ApiResponse Response(Laptop? laptopFromDB, int entries)
+    {
+        if (entries == 0)
+        {
+            return new ApiResponse(StatusCodes.Status500InternalServerError, new
+            {
+                Message = "The database changes is not secceded"
+            });
+        }
+        else if (laptopFromDB is null)
+        {
+            return new ApiResponse(StatusCodes.Status500InternalServerError, new
+            {
+                Message = "Impossible to get the laptop from the database"
+            });
+        }
+        else
+        {
+            return new ApiResponse(StatusCodes.Status201Created, new
+            {
+                laptopFromDB
+            });
+        }
     }
 }

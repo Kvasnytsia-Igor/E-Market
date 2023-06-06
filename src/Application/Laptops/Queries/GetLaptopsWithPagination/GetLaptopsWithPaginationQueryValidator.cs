@@ -7,12 +7,7 @@ public class GetLaptopsWithPaginationQueryValidator : AbstractValidator<GetLapto
 {
     public GetLaptopsWithPaginationQueryValidator()
     {
-        RuleFor(query => query.PageNumber)
-            .GreaterThanOrEqualTo(1)
-            .WithMessage("{PropertyName} at least greater than or equal to 1.");
-
-        RuleFor(query => query.PageSize)
-            .GreaterThanOrEqualTo(1)
-            .WithMessage("{PropertyName} at least greater than or equal to 1.");
+        RuleFor(query => query.PageNumber).GreaterThanOrEqualTo(1);
+        RuleFor(query => query.PageSize).GreaterThanOrEqualTo(1);
     }
 }

@@ -6,6 +6,6 @@ public class DeleteLaptopCommandValidator : AbstractValidator<DeleteLaptopComman
 {
     public DeleteLaptopCommandValidator()
     {
-        RuleFor(command => command.Id).NotEmpty();
+        RuleFor(command => command.Id).NotEqual(Guid.Empty);
     }
 }

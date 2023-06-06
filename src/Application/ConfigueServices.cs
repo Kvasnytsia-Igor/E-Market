@@ -1,4 +1,6 @@
 ﻿using Application.Common.Behaviours;
+using Application.Common.Interfaces;
+using Application.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ public static class ConfigueServices
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         });
+        services.AddScoped<ILaptopsService, LaptopsService>();
         return services;
     }
 }
