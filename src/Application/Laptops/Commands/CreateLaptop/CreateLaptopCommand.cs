@@ -33,24 +33,16 @@ public class CreateLaptopCommandHandler : IRequestHandler<CreateLaptopCommand, A
             Series = request.Series,
         };
         int entries = await _laptopsService.Add(laptop, cancellationToken);
-        Laptop? laptopFromDB = await _laptopsService.GetLastAdded(cancellationToken);
-        return Response(laptopFromDB, entries);
+        return Response(laptop, entries);
     }
 
-    private static ApiResponse Response(Laptop? laptopFromDB, int entries)
+    private static ApiResponse Response(Laptop laptopFromDB, int entries)
     {
-        if (entries == 0)
+        if (entries == 0 || laptopFromDB.Id == Guid.Empty)
         {
             return new ApiResponse(StatusCodes.Status500InternalServerError, new
             {
                 Message = "The database changes is not secceded"
-            });
-        }
-        else if (laptopFromDB is null)
-        {
-            return new ApiResponse(StatusCodes.Status500InternalServerError, new
-            {
-                Message = "Impossible to get the laptop from the database"
             });
         }
         else

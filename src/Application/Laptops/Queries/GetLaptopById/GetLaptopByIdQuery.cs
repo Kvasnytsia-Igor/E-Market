@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -14,36 +16,43 @@ public class GetLaptopByIdQuery : IRequest<ApiResponse>
 
 public class GetLaptopByIdQueryHandler : IRequestHandler<GetLaptopByIdQuery, ApiResponse>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DbSet<Laptop> _laptopsRepository;
 
-    public GetLaptopByIdQueryHandler(IApplicationDbContext context)
+    private readonly IMapper _mapper;
+
+    public GetLaptopByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
-        _context = context;
+        _laptopsRepository = context.Laptops;
+        _mapper = mapper;
     }
 
     public async Task<ApiResponse> Handle(GetLaptopByIdQuery request, CancellationToken cancellationToken)
     {
-        Laptop? laptop = await _context.Laptops
+        LaptopDTO? laptopDTO = await _laptopsRepository
             .Where(laptop => laptop.Id == request.Id)
+            .ProjectTo<LaptopDTO>(_mapper.ConfigurationProvider)
+            .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
-        return Response(laptop, request.Id);
+        if (laptopDTO is null)
+        {
+            return NotFoundResponse(request.Id);
+        }
+        return OkResponse(laptopDTO);
     }
 
-    private static ApiResponse Response(Laptop? laptop, Guid guid)
+    private static ApiResponse OkResponse(LaptopDTO dto)
     {
-        if (laptop == null)
+        return new ApiResponse(StatusCodes.Status200OK, new
         {
-            return new ApiResponse(StatusCodes.Status404NotFound, new
-            {
-                Message = string.Format("There is no laptop with guid = {0,0}", guid)
-            });
-        }
-        else
+            Result = dto
+        });
+    }
+
+    private static ApiResponse NotFoundResponse(Guid guid)
+    {
+        return new ApiResponse(StatusCodes.Status404NotFound, new
         {
-            return new ApiResponse(StatusCodes.Status200OK, new
-            {
-                laptop
-            });
-        }
+            Message = string.Format("There is no laptop with guid = {0,0}", guid)
+        });
     }
 }

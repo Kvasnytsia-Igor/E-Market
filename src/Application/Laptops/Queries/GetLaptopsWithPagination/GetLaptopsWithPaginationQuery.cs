@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Mappings;
 using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
@@ -16,18 +17,18 @@ public record class GetLaptopsWithPaginationQuery : IRequest<ApiResponse>
 
 public class GetLaptopsWithPaginationQueryHeandler : IRequestHandler<GetLaptopsWithPaginationQuery, ApiResponse>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DbSet<Laptop> _laptopsRepository;
 
     public GetLaptopsWithPaginationQueryHeandler(IApplicationDbContext context)
     {
-        _context = context;
+        _laptopsRepository = context.Laptops;
     }
 
     public async Task<ApiResponse> Handle(GetLaptopsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        IQueryable<Laptop> laptops = _context.Laptops.AsNoTracking();
-        PaginatedList<Laptop> paginatedList = await PaginatedList<Laptop>
-            .CreateAsync(laptops, request.PageNumber, request.PageSize);
+        PaginatedList<Laptop> paginatedList = await _laptopsRepository
+            .OrderBy(l => l.Price)
+            .PaginatedListAsync(request.PageNumber, request.PageSize);
         return Response(paginatedList);
     }
 
