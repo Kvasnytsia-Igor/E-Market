@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Laptops.Commands.CreateLaptop;
 
@@ -17,11 +18,11 @@ public class CreateLaptopCommand : IRequest<ApiResponse>
 
 public class CreateLaptopCommandHandler : IRequestHandler<CreateLaptopCommand, ApiResponse>
 {
-    private readonly ILaptopsService _laptopsService;
+    private readonly IApplicationDbContext _context;
 
-    public CreateLaptopCommandHandler(ILaptopsService laptopsService)
+    public CreateLaptopCommandHandler(IApplicationDbContext context)
     {
-        _laptopsService = laptopsService;
+        _context = context;
     }
 
     public async Task<ApiResponse> Handle(CreateLaptopCommand request, CancellationToken cancellationToken)
@@ -32,25 +33,30 @@ public class CreateLaptopCommandHandler : IRequestHandler<CreateLaptopCommand, A
             Price = request.Price,
             Series = request.Series,
         };
-        int entries = await _laptopsService.Add(laptop, cancellationToken);
-        return Response(laptop, entries);
+        _context.Laptops.Add(laptop);
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex)
+        {
+            return ResponseInternalServerError(ex.Message);
+        }
+        return ResponseCreated(laptop);
     }
 
-    private static ApiResponse Response(Laptop laptopFromDB, int entries)
+    private static ApiResponse ResponseInternalServerError(string message)
     {
-        if (entries == 0 || laptopFromDB.Id == Guid.Empty)
+        return new ApiResponse(StatusCodes.Status500InternalServerError, new
         {
-            return new ApiResponse(StatusCodes.Status500InternalServerError, new
-            {
-                Message = "The database changes is not secceded"
-            });
-        }
-        else
+            Message = message
+        });
+    }
+    private static ApiResponse ResponseCreated(Laptop laptop)
+    {
+        return new ApiResponse(StatusCodes.Status201Created, new
         {
-            return new ApiResponse(StatusCodes.Status201Created, new
-            {
-                laptopFromDB
-            });
-        }
+            laptop
+        });
     }
 }

@@ -18,50 +18,57 @@ public class UpdateLaptopCommandHandler : IRequestHandler<UpdateLaptopCommand, A
 {
     private readonly IApplicationDbContext _context;
 
-    public UpdateLaptopCommandHandler(IApplicationDbContext context)
+    private readonly ILaptopsService _lsptopsService;
+
+    public UpdateLaptopCommandHandler(IApplicationDbContext context, ILaptopsService lsptopsService)
     {
         _context = context;
+        _lsptopsService = lsptopsService;
+
     }
 
     public async Task<ApiResponse> Handle(UpdateLaptopCommand request, CancellationToken cancellationToken)
     {
-        Laptop? laptop = await _context.Laptops
-            .Where(laptop => laptop.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-        int entries = 0;
-        if (laptop is not null)
+        Laptop? laptop = await _lsptopsService.GetFirstByIdAsync(request.Id, cancellationToken);
+        if (laptop is null)
         {
-            UpdateLaptopDTO laptopDTO = request.LaptopDTO;
-            laptop.Brand = laptopDTO.Brand;
-            laptop.Series = laptopDTO.Series;
-            laptop.Price = laptopDTO.Price;
-            entries = await _context.SaveChangesAsync(cancellationToken);
+            return ResponseNotFound(request.Id);
         }
-        return Response(laptop, request.Id, entries);
+        laptop.Brand = request.LaptopDTO.Brand;
+        laptop.Series = request.LaptopDTO.Series;
+        laptop.Price = request.LaptopDTO.Price;
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex)
+        {
+            return ResponseInternalServerError(ex.Message);
+        }
+        return ResponseOk(laptop);
     }
 
-    private static ApiResponse Response(Laptop? laptop, Guid id, int entries)
+    private static ApiResponse ResponseNotFound(Guid id)
     {
-        if (laptop == null)
+        return new ApiResponse(StatusCodes.Status404NotFound, new
         {
-            return new ApiResponse(StatusCodes.Status404NotFound, new
-            {
-                Message = string.Format("There is no laptop with guid = {0,0}", id)
-            });
-        }
-        else if (entries == 0)
+            Message = string.Format("There is no laptop with guid = {0,0}", id)
+        });
+    }
+
+    private static ApiResponse ResponseInternalServerError(string message)
+    {
+        return new ApiResponse(StatusCodes.Status500InternalServerError, new
         {
-            return new ApiResponse(StatusCodes.Status500InternalServerError, new
-            {
-                Message = "The database changes is not secceded"
-            });
-        }
-        else
+            Message = message
+        });
+    }
+
+    private static ApiResponse ResponseOk(Laptop laptop)
+    {
+        return new ApiResponse(StatusCodes.Status200OK, new
         {
-            return new ApiResponse(StatusCodes.Status200OK, new
-            {
-                laptop
-            });
-        }
+            laptop
+        });
     }
 }

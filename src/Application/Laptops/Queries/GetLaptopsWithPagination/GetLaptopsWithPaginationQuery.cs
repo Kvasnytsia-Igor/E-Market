@@ -1,10 +1,8 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Mappings;
 using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Laptops.Queries.GetLaptopsWithPagination;
 
@@ -17,36 +15,37 @@ public record class GetLaptopsWithPaginationQuery : IRequest<ApiResponse>
 
 public class GetLaptopsWithPaginationQueryHeandler : IRequestHandler<GetLaptopsWithPaginationQuery, ApiResponse>
 {
-    private readonly DbSet<Laptop> _laptopsRepository;
+    private readonly ILaptopsService _laptopsService;
 
-    public GetLaptopsWithPaginationQueryHeandler(IApplicationDbContext context)
+    public GetLaptopsWithPaginationQueryHeandler(ILaptopsService laptopsService)
     {
-        _laptopsRepository = context.Laptops;
+        _laptopsService = laptopsService;
     }
 
     public async Task<ApiResponse> Handle(GetLaptopsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        PaginatedList<Laptop> paginatedList = await _laptopsRepository
-            .OrderBy(l => l.Price)
-            .PaginatedListAsync(request.PageNumber, request.PageSize);
-        return Response(paginatedList);
-    }
-
-    private static ApiResponse Response(PaginatedList<Laptop> paginatedList)
-    {
+        PaginatedList<Laptop> paginatedList = await _laptopsService
+            .GetPaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
         if (!paginatedList.Items.Any())
         {
-            return new ApiResponse(StatusCodes.Status404NotFound, new
-            {
-                Message = "The list with laptops is empty"
-            });
+            return ResponseNotFound();
         }
-        else
+        return ResponseOK(paginatedList);
+    }
+
+    private static ApiResponse ResponseNotFound()
+    {
+        return new ApiResponse(StatusCodes.Status404NotFound, new
         {
-            return new ApiResponse(StatusCodes.Status200OK, new
-            {
-                paginatedList
-            });
-        }
+            Message = "The list with laptops is empty"
+        });
+    }
+
+    private static ApiResponse ResponseOK(PaginatedList<Laptop> paginatedList)
+    {
+        return new ApiResponse(StatusCodes.Status200OK, new
+        {
+            paginatedList
+        });
     }
 }

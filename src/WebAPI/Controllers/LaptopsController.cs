@@ -4,6 +4,7 @@ using Application.Laptops.Commands.DeleteLaptop;
 using Application.Laptops.Commands.UpdateLaptop;
 using Application.Laptops.Queries.GetLaptopById;
 using Application.Laptops.Queries.GetLaptopsWithPagination;
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,10 @@ public class LaptopsController : ControllerBase
         try
         {
             ApiResponse response = await Mediator.Send(request);
+            if (response.StatusCode == StatusCodes.Status204NoContent)
+            {
+                return StatusCode(response.StatusCode);
+            }
             return StatusCode(response.StatusCode, response.Data);
         }
         catch (Exception ex)
@@ -72,6 +77,6 @@ public class LaptopsController : ControllerBase
         });
 
     [HttpDelete("{Id:guid}")]
-    public async Task<ActionResult> DeleteUser([FromHeader] DeleteLaptopCommand command)
+    public async Task<ActionResult> DeleteLaptop([FromHeader] DeleteLaptopCommand command) 
         => await Go(command);
 }

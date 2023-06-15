@@ -16,44 +16,51 @@ public class DeleteLaptopCommandHandler : IRequestHandler<DeleteLaptopCommand, A
 {
     private readonly IApplicationDbContext _context;
 
-    public DeleteLaptopCommandHandler(IApplicationDbContext context)
+    private readonly ILaptopsService _laptopsService;
+
+    public DeleteLaptopCommandHandler(IApplicationDbContext context, ILaptopsService laptopsService)
     {
         _context = context;
+        _laptopsService = laptopsService;
     }
 
     public async Task<ApiResponse> Handle(DeleteLaptopCommand request, CancellationToken cancellationToken)
     {
-        Laptop? laptop = await _context.Laptops
-           .Where(laptop => laptop.Id == request.Id)
-           .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-        int entries = 0;
-        if (laptop is not null)
+        Laptop? laptop = await _laptopsService.GetFirstByIdAsync(request.Id, cancellationToken);
+        if (laptop is null)
         {
-            _context.Laptops.Remove(laptop);
-            entries = await _context.SaveChangesAsync(cancellationToken);
+            return ResponseNotFound(request.Id);
         }
-        return Response(laptop, request.Id, entries);
+        _context.Laptops.Remove(laptop);
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex)
+        {
+            return ResponseInternalServerError(ex.Message);
+        }
+        return ResponseNoContent();
     }
 
-    private static ApiResponse Response(Laptop? laptop, Guid id, int entries)
+    private static ApiResponse ResponseNotFound(Guid id)
     {
-        if (laptop == null)
+        return new ApiResponse(StatusCodes.Status404NotFound, new
         {
-            return new ApiResponse(StatusCodes.Status404NotFound, new
-            {
-                Message = string.Format("There is no laptop with guid = {0,0}", id)
-            });
-        }
-        else if (entries == 0)
+            Message = string.Format("There is no laptop with guid = {0,0}", id)
+        });
+    }
+
+    private static ApiResponse ResponseInternalServerError(string message)
+    {
+        return new ApiResponse(StatusCodes.Status500InternalServerError, new
         {
-            return new ApiResponse(StatusCodes.Status500InternalServerError, new
-            {
-                Message = "The database changes is not secceded"
-            });
-        }
-        else
-        {
-            return new ApiResponse(StatusCodes.Status204NoContent, new object());
-        }
+            Message = message
+        });
+    }
+
+    private static ApiResponse ResponseNoContent()
+    {
+        return new ApiResponse(StatusCodes.Status204NoContent, new object());
     }
 }
