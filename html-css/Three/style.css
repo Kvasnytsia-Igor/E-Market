@@ -1,0 +1,141 @@
+/* Theming */
+@import "Roboto/Roboto-Regular.ttf";
+
+:root {
+  --teal: #00b8a9;
+  --beige: #f8f3d4;
+  --red: #f6416c;
+  --yellow: #ffde7d;
+} /* variables*/
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  font-family: "Roboto", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Header */
+.header {
+  background-color: var(--yellow);
+  width: 100%;
+}
+
+.logo {
+  margin: 10px 0 10px 10px;
+  height: 50px;
+}
+
+/* Nav menu */
+.nav {
+  width: 100%;
+  background-color: var(--yellow);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease-out;
+}
+
+.menu a {
+  display: block;
+  padding: 15.8px;
+  color: var(--teal);
+}
+
+.menu a:hover {
+  background-color: var(--beige);
+}
+
+/* Menu Icon */
+.hamb {
+  cursor: pointer;
+  float: right;
+  padding: 24px 20px;
+  margin: 10px 10px 10px 0;
+} /* Style label tag */
+
+.hamb-line {
+  background: var(--teal);
+  display: block;
+  height: 2px;
+  position: relative;
+  width: 24px;
+} /* Style span tag */
+
+.hamb-line::before,
+.hamb-line::after {
+  background: var(--teal);
+  content: "";
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all 0.2s ease-out;
+  width: 100%;
+}
+
+.hamb-line::before {
+  top: 5px;
+}
+.hamb-line::after {
+  top: -5px;
+}
+
+.side-menu {
+  display: none;
+} /* Hide checkbox */
+
+/* Toggle menu icon */
+.side-menu:checked ~ nav {
+  max-height: 100%;
+}
+.side-menu:checked ~ .hamb .hamb-line {
+  background: transparent;
+}
+.side-menu:checked ~ .hamb .hamb-line::before {
+  transform: rotate(-45deg);
+  top: 0;
+}
+.side-menu:checked ~ .hamb .hamb-line::after {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+/* Responsiveness */
+@media (min-width: 768px) {
+  .nav {
+    max-height: none;
+    width: fit-content;
+    display: inline-block;
+    background-color: transparent;
+  }
+  .menu li {
+    float: left;
+  }
+  .menu a:hover{
+    background-color: transparent;
+    color: var(--red);
+  }
+  .hamb {
+    display: none;
+  }
+  .menu a {
+    display: block;
+    padding: 15.8px;
+    color: var(--teal);
+    margin: 10px 0;
+    text-align: center;
+    width: 100px;
+  }
+}
