@@ -1,0 +1,114 @@
+@import url(/general.css);
+
+.header {
+  background-color: var(--dark);
+  width: 100%;
+}
+
+.header .logo {
+  margin: 10px 0 10px 10px;
+  height: 50px;
+  display: inline-block;
+}
+
+/* Nav menu */
+.header .nav {
+  width: 100%;
+  background-color: var(--dark);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 1s ease-out;
+}
+
+.header .menu a {
+  display: block;
+  padding: 15.8px;
+  color: var(--white);
+}
+
+.header .menu a:hover {
+  background-color: var(--gray);
+}
+
+/* Menu Icon */
+.header .hamb {
+  cursor: pointer;
+  float: right;
+  padding: 24px 20px;
+  margin: 10px 10px 10px 0;
+} /* Style label tag */
+
+.header .hamb-line {
+  background: var(--white);
+  display: block;
+  height: 2px;
+  position: relative;
+  width: 24px;
+} /* Style span tag */
+
+.header .hamb-line::before,
+.header .hamb-line::after {
+  background: var(--white);
+  content: "";
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all 0.2s ease-out;
+  width: 100%;
+}
+
+.header .hamb-line::before {
+  top: 5px;
+}
+.header .hamb-line::after {
+  top: -5px;
+}
+
+.header .side-menu {
+  display: none;
+} /* Hide checkbox */
+
+/* Toggle menu icon */
+.header .side-menu:checked ~ nav {
+  max-height: 100%;
+}
+.header .side-menu:checked ~ .hamb .hamb-line {
+  background: transparent;
+}
+.header .side-menu:checked ~ .hamb .hamb-line::before {
+  transform: rotate(-45deg);
+  top: 0;
+}
+.header .side-menu:checked ~ .hamb .hamb-line::after {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+/* Responsiveness */
+@media (min-width: 768px) {
+  .header .nav {
+    max-height: none;
+    width: fit-content;
+    float: right;
+    background-color: transparent;
+  }
+  .header .menu li {
+    float: left;
+  }
+  .header .menu a:hover {
+    background-color: var(--gray);
+    color: var(--white);
+  }
+  .header .hamb {
+    display: none;
+  }
+  .header .menu a {
+    display: block;
+    padding: 15.8px;
+    color: var(--white);
+    margin: 10px;
+    text-align: center;
+    width: 100px;
+  }
+}
+

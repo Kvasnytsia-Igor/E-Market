@@ -1,0 +1,81 @@
+@import url(/general.css);
+
+:root {
+  --red: #ea005e;
+  --blue: #4368fd;
+  --yellow: #ffc300;
+  --white: #ffffff;
+  --light-gray: #f3f3f3;
+  --gray: #232f3e;
+  --dark: #131921;
+} /* variables*/
+
+.table-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.responsive-table li {
+  padding: 25px 30px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  color: var(--gray);
+}
+
+.responsive-table .table-header {
+  background-color: var(--gray);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--white);
+}
+
+.responsive-table .table-row {
+  background-color: var(--white);
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+}
+
+.responsive-table .col-1 {
+  flex-basis: 20%;
+}
+.responsive-table .col-2 {
+  flex-basis: 20%;
+}
+.responsive-table .col-3 {
+  flex-basis: 20%;
+}
+.responsive-table .col-4 {
+  flex-basis: 20%;
+}
+.responsive-table .col-5 {
+  flex-basis: 20%;
+}
+
+.responsive-table .table-row:hover {
+  background-color: var(--blue);
+  color: #ffffff;
+}
+
+@media all and (max-width: 767px) {
+  .responsive-table .table-header {
+    display: none;
+  }
+  .responsive-table li {
+    display: block;
+  }
+  .responsive-table .col {
+    flex-basis: 100%;
+  }
+  .responsive-table .col {
+    display: flex;
+    padding: 10px 0;
+  }
+  .responsive-table .col:before {
+    padding-right: 10px;
+    content: attr(data-label);
+    flex-basis: 50%;
+    text-align: right;
+  }
+}

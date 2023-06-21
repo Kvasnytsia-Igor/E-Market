@@ -1,0 +1,33 @@
+@font-face {
+  font-family: Roboto;
+  src: url(/Roboto/Roboto-Regular.ttf);
+}
+
+:root {
+  --red: #ff5781;
+  --blue: #4c6eff;
+  --yellow: #ffc300;
+  --white: #ffffff;
+  --light-gray: #f3f3f3;
+  --gray: #232f3e;
+  --dark: #131921;
+} /* variables*/
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
