@@ -4,13 +4,10 @@
 }
 
 :root {
-  --red: #ff5781;
-  --blue: #4c6eff;
-  --yellow: #ffc300;
+  --black: #131921;
+  --dark-blue:  #1f3a5e;
+  --light-blue: #9ce2fa;
   --white: #ffffff;
-  --light-gray: #f3f3f3;
-  --gray: #232f3e;
-  --dark: #131921;
 } /* variables*/
 
 /* Reset */
@@ -22,7 +19,10 @@
 
 body {
   font-family: "Roboto", serif;
+  color: var(--black);
 }
+
+
 
 a {
   text-decoration: none;
@@ -31,3 +31,5 @@ a {
 ul {
   list-style: none;
 }
+
+

@@ -1,0 +1,11 @@
+@import url(/general.css);
+
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--black);
+  color: var(--white);
+  text-align: center;
+  padding: 25px 10px;
+}

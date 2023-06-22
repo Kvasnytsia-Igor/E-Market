@@ -1,7 +1,7 @@
 @import url(/general.css);
 
 .header {
-  background-color: var(--dark);
+  background-color: var(--black);
   width: 100%;
 }
 
@@ -17,7 +17,7 @@
   background-color: var(--dark);
   overflow: hidden;
   max-height: 0;
-  transition: max-height 1s ease-out;
+  transition: 1s ease-out;
 }
 
 .header .menu a {
@@ -27,7 +27,8 @@
 }
 
 .header .menu a:hover {
-  background-color: var(--gray);
+  background-color: var(--light-blue);
+  color: var(--dark);
 }
 
 /* Menu Icon */
@@ -53,7 +54,7 @@
   display: block;
   height: 100%;
   position: absolute;
-  transition: all 0.2s ease-out;
+  transition: 0.2s ease-out;
   width: 100%;
 }
 
@@ -96,8 +97,8 @@
     float: left;
   }
   .header .menu a:hover {
-    background-color: var(--gray);
-    color: var(--white);
+    background-color: var(--light-blue);
+    color: var(--black);
   }
   .header .hamb {
     display: none;

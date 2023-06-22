@@ -1,0 +1,79 @@
+@import url(/general.css);
+
+.pager {
+  margin: 0 0 3.75rem;
+  text-align: center;
+}
+.pager__item {
+  display: inline-block;
+  vertical-align: top;
+  font-weight: bold;
+  margin: 0 2px;
+}
+.pager__item.active .pager__link {
+  background-color: var(--dark-blue);
+  border-color: var(--dark-blue);
+  color: #fff;
+  text-decoration: none;
+}
+.pager__item--prev svg,
+.pager__item--next svg {
+  width: 8px;
+  height: 12px;
+}
+.pager__item--next .pager__link svg {
+  transform: rotate(180deg);
+  transform-origin: center center;
+}
+.pager__link {
+  position: relative;
+  border-radius: 4px;
+  display: block;
+  text-align: center;
+  width: 2.625rem;
+  height: 2.625rem;
+  line-height: 2.625rem;
+  margin-left: -1px;
+  color: var(--black);
+  text-decoration: none;
+  transition: 0.3s;
+}
+.pager__link:hover,
+.pager__link:focus,
+.pager__link:active {
+  background-color: var(--dark-blue);
+  border-color: var(--dark-blue);
+  color: white;
+  text-decoration: none;
+}
+.pager__link:hover svg path,
+.pager__link:focus svg path,
+.pager__link:active svg path {
+  fill: white;
+}
+.pager .pager__item.active + .pager__item .pager__link,
+.pager .pager__item:hover + .pager__item .pager__link {
+  border-left-color: var(--dark-blue);
+}
+
+@media screen and (max-width: 576px) {
+  .pager__item {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  .pager__item.active,
+  .pager__item:first-of-type,
+  .pager__item:last-of-type,
+  .pager__item:nth-of-type(2),
+  .pager__item:nth-last-of-type(2) {
+    position: initial;
+    top: initial;
+    left: initial;
+  }
+  .pager__item.active + li {
+    position: initial;
+    top: initial;
+    left: initial;
+  }
+}

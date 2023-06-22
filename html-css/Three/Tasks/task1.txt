@@ -1,0 +1,2 @@
+Create responsible header with animation
+Create footer on the about page which is always at the bottom
