@@ -5,7 +5,7 @@
 
 :root {
   --black: #131921;
-  --dark-blue:  #1f3a5e;
+  --dark-blue: #1f3a5e;
   --light-blue: #9ce2fa;
   --white: #ffffff;
 } /* variables*/
@@ -19,7 +19,10 @@
 
 body {
   font-family: "Roboto", serif;
-  color: var(--black);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 a {
@@ -29,15 +32,3 @@ a {
 ul {
   list-style: none;
 }
-
-.page-container{
-  position: relative;
-  min-height: 100vh;
-}
-
-.content-wrap{
-  padding-bottom: 88.4px;  
-}
-
-
-

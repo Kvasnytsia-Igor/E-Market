@@ -1,0 +1,35 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+}
+header {
+  flex: 0 0 100px;
+  background-color: #c14f4f;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  background-color: #699ebd;
+}
+.side {
+  background-color: #c28282;
+  flex-grow:0;
+  flex-basis: 300px;
+}
+.middle {
+  background-color: aquamarine;
+  flex-grow:1;
+
+}
+footer {
+  flex: 0 0 40px;
+  background-color: #c14f4f;
+}
+
+@media screen {
+  
+}

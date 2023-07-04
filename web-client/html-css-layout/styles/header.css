@@ -1,29 +1,28 @@
-.header {
-  top: 0;
-  width: 100%;
-  box-shadow: 0 4px 20px hsla(207, 24%, 35%, 0.1);
+header {
+  flex: 0 0 100px;
   background-color: var(--black);
+  box-shadow: 0 4px 20px hsla(207, 24%, 35%, 0.1);
   z-index: 1;
 }
 
-.header nav {
+header nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 30px;
 }
 
-.header .logo {
+header .logo {
   height: 50px;
 }
 
-.header .menu {
+header .menu {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.header .menu a {
+header .menu a {
   display: block;
   padding: 7px 15px;
   font-size: 17px;
@@ -32,29 +31,29 @@
   color: #fff;
 }
 
-.header .menu:hover a {
+header .menu:hover a {
   opacity: 0.4;
 }
 
-.header .menu a:hover {
+header .menu a:hover {
   opacity: 1;
   color: #fff;
 }
 
-.header .menu-icon {
+header .menu-icon {
   display: none;
 }
 
-.header #menu-toggle {
+header #menu-toggle {
   display: none;
 }
 
-.header #menu-toggle:checked ~ .menu {
+header #menu-toggle:checked ~ .menu {
   transform: scale(1, 1);
 }
 
 @media only screen and (max-width: 950px) {
-  .header .menu {
+  header .menu {
     flex-direction: column;
     background-color: var(--black);
     align-items: start;
@@ -69,15 +68,15 @@
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   }
 
-  .header .menu a {
+  header .menu a {
     margin-left: 12px;
   }
 
-  .header .menu li {
+  header .menu li {
     margin-bottom: 10px;
   }
 
-  .header .menu-icon {
+  header .menu-icon {
     display: block;
     color: #fff;
     font-size: 28px;

@@ -1,0 +1,21 @@
+/*  */
+.container {
+  height: 100vh;
+  background-color: green;
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+.child-side {
+  flex-grow: 1;
+  height: 100%;
+  border: 1px solid black;
+  /* margin: 0 20px; */
+}
+.child-main {
+  flex-grow: 4;
+  height: 100%;
+  border: 1px solid black;
+  /* margin: 0 20px; */
+}

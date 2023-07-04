@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+:root {
+  --container-height: 600px;
+}
+
+.list {
+  border: 1px solid #37392e;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #eee5e5;
+}
+
+.list li {
+  padding: 20px;
+  border-top: 1px solid #ccc;
+  scroll-snap-align: start;
+}
+
+.list li:first-child {
+  border: 0;
+}
+
+/* width */
+.list::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.list::-webkit-scrollbar-thumb {
+  background: #28afb0;
+}
+
+/* Handle on hover */
+.list::-webkit-scrollbar-thumb:hover {
+  background: #19647e;
+}

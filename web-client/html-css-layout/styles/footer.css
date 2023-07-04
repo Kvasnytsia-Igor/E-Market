@@ -1,0 +1,8 @@
+footer {
+  background-color: #c14f4f;
+  height: 88.4px;
+  background-color: var(--black);
+  color: var(--white);
+  text-align: center;
+  padding: 25px 10px;
+}
